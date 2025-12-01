@@ -47,6 +47,16 @@ def add_expense(category: str, amount: float, description: str) -> None:
     save_expenses(df)
 
 
+def get_highest_and_lowest_category(df: pd.DataFrame):
+    if df.empty:
+        return None, None
+
+    by_cat = (df.groupby("category")["amount"].sum().reset_index().rename(columns={"amount": "total_amount"}).sort_values("total_amount", ascending=False))
+    highest = by_cat.iloc[0]["category"]
+    lowest = by_cat.iloc[-1]["category"]
+    return highest, lowest
+
+
 
 # ___________________________ Streamlit App _____________________________
 
@@ -64,20 +74,17 @@ with tab_view:
         st.info("No expenses found yet. Add some on the 'Add Expense' tab.")
     else:
         df_sorted = df.sort_values(COL_TIME_ID, ascending=False)
-        st.dataframe(df_sorted, use_container_width=True)
-
-        # Quick summary
         total_spent = df_sorted[COL_AMOUNT].sum()
         st.metric("Total Expense", f"${total_spent:,.2f}")
+        st.dataframe(df_sorted, use_container_width=True)
 
-        # Show by category table
-        by_cat = (
-            df_sorted.groupby(COL_CATEGORY)[COL_AMOUNT]
-            .sum()
-            .reset_index()
-            .rename(columns={COL_AMOUNT: "total_amount"})
-            .sort_values("total_amount", ascending=False)
-        )
+        # Show by category
+        highest, lowest = get_highest_and_lowest_category(df)
+        col1, col2 = st.columns(2)
+        col1.metric("Highest Spend Category", highest if highest else "None")
+        col2.metric("Lowest Spend Category", lowest if lowest else "None")
+        
+        by_cat = (df_sorted.groupby(COL_CATEGORY)[COL_AMOUNT].sum().reset_index().rename(columns={COL_AMOUNT: "total_amount"}).sort_values("total_amount", ascending=False))
         st.markdown("**Total by Category**")
         st.dataframe(by_cat, use_container_width=True)
 
