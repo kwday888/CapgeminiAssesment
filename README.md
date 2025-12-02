@@ -100,15 +100,19 @@ This seed data enables immediate testing of:
 ```bash
 git clone https://github.com/<your-username>/<repo-name>.git
 cd <repo-name>
+```
 
 ### **2. Install dependencies**
+```bash
 pip install -r requirements.txt
+```
 
 ### **3. Run the application**
+```bash
 streamlit run app.py
-
-Your default browser will automatically open the app.
 ```
+Your default browser will automatically open the app.
+
 
 ---
 
