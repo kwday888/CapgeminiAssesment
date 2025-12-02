@@ -1,4 +1,4 @@
-# **Simple Expense Tracker Capgemini Assessment**
+# **Capgemini Assessment: Simple Expense Tracker**
 
 A lightweight expense tracking application built for the Capgemini technical assessment.  
 The app allows users to enter expenses (category, amount, description) and provides key analytics including:
